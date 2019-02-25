@@ -40,6 +40,26 @@ resource "aws_instance" "jenkins_slave" {
     }
 }
 
+resource "aws_security_group" "jenkins_master_sg" {
+    name = "${var.name_tag_prepend}_jenkins_master_sg"
+    description = "Allow HTTP 8080 and SSH to Jenkins master"
+    vpc_id = "${var.vpc_id}"
+
+    ingress {
+        from_port = 8080
+        to_port = 8080
+        protocol = "-1"
+        cidr_blocks = "${var.source_ips_master_http}"
+    }
+
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "-1"
+        cidr_blocks = "${var.source_ips_master_ssh}"
+    }
+}
+
 output "master_url" {
     value = "http://${aws_instance.jenkins_master.public_ip}:8080"
 }
