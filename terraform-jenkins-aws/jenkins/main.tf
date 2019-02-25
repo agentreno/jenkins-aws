@@ -36,7 +36,7 @@ resource "aws_instance" "jenkins_slave" {
     key_name = "${var.ec2_key_pair_name}"
 
     tags {
-        Name = "${var.name_tag_prepend}_jenkins_master"
+        Name = "${var.name_tag_prepend}_jenkins_slave"
     }
 }
 
