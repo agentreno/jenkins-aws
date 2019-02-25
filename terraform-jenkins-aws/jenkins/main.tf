@@ -59,6 +59,13 @@ resource "aws_security_group" "jenkins_master_sg" {
         protocol = "tcp"
         cidr_blocks = "${var.source_ips_master_ssh}"
     }
+
+    egress {
+        from_port = 0
+        to_port = 65535
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
 }
 
 output "master_url" {
