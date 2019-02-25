@@ -2,9 +2,8 @@
 
 ## Description
 
-Container Jenkins running on ECS Fargate in a master-slave setup. Uses
-terraform to create AWS resources and custom Dockerfiles to install Jenkins
-plugins.
+Jenkins running on AWS EC2 in a master-slave setup. Uses terraform to create
+AWS resources and Packer to pre-install Jenkins plugins.
 
 ### Security goals
 
@@ -18,5 +17,5 @@ plugins.
 
 ## TODO
 
-- Create local environment with docker-compose
-- Get a basic functioning setup on Fargate
+- Get a basic functioning setup on EC2
+- Harden
