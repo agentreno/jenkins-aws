@@ -24,8 +24,23 @@ resource "aws_instance" "jenkins_master" {
 
     key_name = "${var.ec2_key_pair_name}"
 
+    user_data = "${file("jenkins/jenkins_master_user_data.sh")}"
+
     tags {
         Name = "${var.name_tag_prepend}_jenkins_master"
+    }
+
+    provisioner "remote-exec" {
+        connection {
+            type = "ssh"
+            user = "ubuntu"
+        }
+        inline = [
+            "cloud-init status --wait",
+            "until sudo test -f /var/lib/jenkins/secrets/initialAdminPassword; do sleep 1; done",
+            "echo Admin Password:",
+            "sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
+        ]
     }
 }
 

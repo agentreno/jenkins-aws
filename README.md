@@ -21,7 +21,8 @@ Infrastructure is created using Terraform. If this is your first time in the
 project, `cd terraform-jenkins-aws` and `terraform init`.
 
 If you don't already have an EC2 key pair, create one, you'll be asked for the
-name of it when you run terraform.
+name of it when you run terraform. Ensure you have ssh-agent running and the
+key pair shows up in `ssh-add -L`.
 
 From the `terraform-jenkins-aws` directory, to build the project, run a plan
 and check the actions that will be performed. Then run an apply:
@@ -31,7 +32,8 @@ terraform plan
 terraform apply
 ```
 
-Terraform will output a URL to access the Jenkins master.
+Terraform will output a URL to access the Jenkins master, and the initial
+administrator password..
 
 ## TODO
 
