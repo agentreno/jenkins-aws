@@ -20,6 +20,7 @@ resource "aws_instance" "jenkins_master" {
     ami = "${data.aws_ami.ubuntu.id}"
     instance_type = "${var.master_instance_type}"
     subnet_id = "${var.subnet_id}"
+    vpc_security_group_ids = ["${aws_security_group.jenkins_master_sg.id}"]
 
     key_name = "${var.ec2_key_pair_name}"
 
@@ -48,14 +49,14 @@ resource "aws_security_group" "jenkins_master_sg" {
     ingress {
         from_port = 8080
         to_port = 8080
-        protocol = "-1"
+        protocol = "tcp"
         cidr_blocks = "${var.source_ips_master_http}"
     }
 
     ingress {
         from_port = 22
         to_port = 22
-        protocol = "-1"
+        protocol = "tcp"
         cidr_blocks = "${var.source_ips_master_ssh}"
     }
 }
