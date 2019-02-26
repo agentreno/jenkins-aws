@@ -52,6 +52,8 @@ resource "aws_instance" "jenkins_slave" {
 
     key_name = "${var.ec2_key_pair_name}"
 
+    user_data = "${file("jenkins/jenkins_slave_user_data.sh")}"
+
     tags {
         Name = "${var.name_tag_prepend}_jenkins_slave"
     }
@@ -106,4 +108,8 @@ resource "aws_security_group" "jenkins_slave_sg" {
 
 output "master_url" {
     value = "http://${aws_instance.jenkins_master.public_ip}:8080"
+}
+
+output "slave_ip" {
+    value = "${aws_instance.jenkins_slave.private_ip}"
 }

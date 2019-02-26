@@ -14,3 +14,7 @@ module "jenkins" {
 output "jenkins_url" {
     value = "${module.jenkins.master_url}"
 }
+
+output "jenkins_slave_ip" {
+    value = "${module.jenkins.slave_ip}"
+}
