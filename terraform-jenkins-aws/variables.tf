@@ -10,6 +10,10 @@ variable "ec2_key_pair_name" {
     default = "karl-devbox"
 }
 
+variable "ec2_key_pair_private_path" {
+    type = "string"
+}
+
 # Source IP ranges to allow HTTP and SSH to master
 variable "source_ips_master" {
     type = "list"

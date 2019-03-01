@@ -7,6 +7,9 @@ variable "subnet_id" {}
 # The key pair to use for SSH access to Jenkins EC2 instances
 variable "ec2_key_pair_name" {}
 
+# The path to the private key to allow Jenkins master access to slave
+variable "ec2_key_pair_private_path" {}
+
 # Allowed IP ingress ranges
 variable "source_ips_master_http" {
     type = "list"

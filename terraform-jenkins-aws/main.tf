@@ -7,6 +7,7 @@ module "jenkins" {
     vpc_id = "${module.vpc.vpc_id}"
     subnet_id = "${module.vpc.public_subnet_id}"
     ec2_key_pair_name = "${var.ec2_key_pair_name}"
+    ec2_key_pair_private_path = "${var.ec2_key_pair_private_path}"
     source_ips_master_http = "${var.source_ips_master}"
     source_ips_master_ssh = "${var.source_ips_master}"
 }

@@ -15,6 +15,20 @@ data "aws_ami" "ubuntu" {
     owners = ["099720109477"]
 }
 
+data "template_file" "add_node_groovy_script" {
+    template = "${file("jenkins/add-node.groovy")}"
+    vars {
+        slave_ip = "${aws_instance.jenkins_slave.private_ip}"
+    }
+}
+
+data "template_file" "create_credential_groovy_script" {
+    template = "${file("jenkins/create-credential.groovy")}"
+    vars {
+        private_key_pem_source = "${file("${var.ec2_key_pair_private_path}")}"
+    }
+}
+
 # Jenkins master and slave instances
 resource "aws_instance" "jenkins_master" {
     ami = "${data.aws_ami.ubuntu.id}"
@@ -30,11 +44,23 @@ resource "aws_instance" "jenkins_master" {
         Name = "${var.name_tag_prepend}_jenkins_master"
     }
 
+    # Provisioning
+    connection {
+        type = "ssh"
+        user = "ubuntu"
+    }
+
+    provisioner "file" {
+        content = "${data.template_file.create_credential_groovy_script.rendered}"
+        destination = "/home/ubuntu/create-credential.groovy"
+    }
+
+    provisioner "file" {
+        content = "${data.template_file.add_node_groovy_script.rendered}"
+        destination = "/home/ubuntu/add-node.groovy"
+    }
+
     provisioner "remote-exec" {
-        connection {
-            type = "ssh"
-            user = "ubuntu"
-        }
         inline = [
             "cloud-init status --wait",
             "until sudo test -f /var/lib/jenkins/secrets/initialAdminPassword; do sleep 1; done",
