@@ -38,6 +38,7 @@ administrator password..
 ## TODO
 
 - Get a basic functioning setup on EC2
+- Add a simple ASG setup (as instances can be killed)
 - Add remote S3 state for terraform
 - Add Packer AMIs for master and slave
 - Add security tool integrations
