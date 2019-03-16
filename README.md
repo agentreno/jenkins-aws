@@ -24,28 +24,16 @@ If you don't already have an EC2 key pair, create one, you'll be asked for the
 name of it when you run terraform. Ensure you have ssh-agent running and the
 key pair shows up in `ssh-add -L`.
 
-Also set default variables in `terraform-jenkins-aws/variables.tf`,
-particularly the `ec2_key_pair_name`, `ec2_key_pair_private_path` and
-`source_ips_master` to your own EC2 key pair details and current IP address.
+Also create a terraform.tfvars (gitignored) defining root variables. The
+necessary variables are defined and documented in the root variables.tf.
+
 For example:
 
 ```
-# Pre-existing EC2 key pair to be used for access to instances
-variable "ec2_key_pair_name" {
-    type = "string"
-    default = "my-ec2-keypair"
-}
-
-variable "ec2_key_pair_private_path" {
-    type = "string"
-    default = "~/.ssh/my-ec2-keypair.pem"
-}
-
-# Source IP ranges to allow HTTP and SSH to master
-variable "source_ips_master" {
-    type = "list"
-    default = ["1.2.3.4/32"]
-}
+ec2_key_pair_name = "my-ec2-keypair"
+ec2_key_pair_private_path = "~/.ssh/my-ec2-keypair.pem"
+source_ips_master = ["1.2.3.4/32"]
+domain_name = "my.route53.domain"
 ```
 
 From the `terraform-jenkins-aws` directory, to build the project, run a plan
@@ -77,5 +65,5 @@ administrator password..
 - Harden the infrastructure and Jenkins instances
     - Security groups for network lockdown
     - Jenkins hardening (plugins, config, authn, authz etc.)
-    - TLS to master
+    - ~~TLS to master~~
     - Use hardened base image for Jenkins
