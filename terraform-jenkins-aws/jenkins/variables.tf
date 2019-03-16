@@ -10,6 +10,9 @@ variable "ec2_key_pair_name" {}
 # The path to the private key to allow Jenkins master access to slave
 variable "ec2_key_pair_private_path" {}
 
+# The security group for the ALB fronting Jenkins
+variable "alb_sg" {}
+
 # Allowed IP ingress ranges
 variable "source_ips_master_http" {
     type = "list"

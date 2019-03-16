@@ -94,6 +94,7 @@ resource "aws_security_group" "jenkins_master_sg" {
         from_port = 8080
         to_port = 8080
         protocol = "tcp"
+        security_groups = ["${var.alb_sg}"]
         cidr_blocks = "${var.source_ips_master_http}"
     }
 
@@ -130,6 +131,10 @@ resource "aws_security_group" "jenkins_slave_sg" {
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
+}
+
+output "master_instance_id" {
+    value = "${aws_instance.jenkins_master.id}"
 }
 
 output "master_url" {
