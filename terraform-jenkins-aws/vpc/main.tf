@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available" {}
+
 # VPC Resources
 resource "aws_vpc" "main" {
     cidr_block = "${var.cidr_block}"
@@ -17,9 +19,21 @@ resource "aws_subnet" "public_subnet" {
     vpc_id = "${aws_vpc.main.id}"
     cidr_block = "${var.cidr_public_subnet}"
     map_public_ip_on_launch = true
+    availability_zone = "${data.aws_availability_zones.available.names[0]}"
 
     tags {
         Name = "${var.vpc_name}_public_subnet"
+    }
+}
+
+resource "aws_subnet" "public_subnet_secondary" {
+    vpc_id = "${aws_vpc.main.id}"
+    cidr_block = "${var.cidr_public_subnet_secondary}"
+    map_public_ip_on_launch = true
+    availability_zone = "${data.aws_availability_zones.available.names[1]}"
+
+    tags {
+        Name = "${var.vpc_name}_public_subnet_secondary"
     }
 }
 
@@ -47,4 +61,8 @@ output "vpc_id" {
 
 output "public_subnet_id" {
     value = "${aws_subnet.public_subnet.id}"
+}
+
+output "public_subnet_secondary_id" {
+    value = "${aws_subnet.public_subnet_secondary.id}"
 }
