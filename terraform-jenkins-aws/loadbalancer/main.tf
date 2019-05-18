@@ -15,13 +15,34 @@ resource "aws_lb_listener" "listener" {
     certificate_arn = "${aws_acm_certificate_validation.cert.certificate_arn}"
 
     default_action {
+        type = "fixed-response"
+        fixed_response {
+            content_type = "text/plain"
+            message_body = "Jenkins instances are accessed at URL paths below root"
+            status_code = "404"
+        }
+    }
+}
+
+resource "aws_lb_listener_rule" "per_master_forwarder" {
+    count = "${var.jenkins_masters_count}"
+
+    listener_arn = "${aws_lb_listener.listener.arn}"
+    action {
         type = "forward"
-        target_group_arn = "${aws_lb_target_group.jenkins_master.arn}"
+        target_group_arn = "${element(aws_lb_target_group.jenkins_master.*.arn, count.index)}"
+    }
+
+    condition {
+        field = "path-pattern"
+        values = ["/${element(keys(var.jenkins_masters), count.index)}/*"]
     }
 }
 
 resource "aws_lb_target_group" "jenkins_master" {
-    name = "main-jenkins-master-tg"
+    count = "${var.jenkins_masters_count}"
+
+    name = "${element(keys(var.jenkins_masters), count.index)}-jenkins-master-tg"
     port = 8080
     protocol = "HTTP"
     vpc_id = "${var.vpc_id}"
@@ -36,8 +57,10 @@ resource "aws_lb_target_group" "jenkins_master" {
 }
 
 resource "aws_lb_target_group_attachment" "jenkins_master" {
-    target_group_arn = "${aws_lb_target_group.jenkins_master.arn}"
-    target_id = "${var.jenkins_master_instance_id}"
+    count = "${var.jenkins_masters_count}"
+
+    target_group_arn = "${element(aws_lb_target_group.jenkins_master.*.arn, count.index)}"
+    target_id = "${element(values(var.jenkins_masters), count.index)}"
     port = 8080
 }
 

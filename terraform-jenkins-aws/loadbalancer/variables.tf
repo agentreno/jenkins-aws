@@ -7,9 +7,6 @@ variable "subnet_id" {}
 # The subnet for the ALB
 variable "subnet_id_secondary" {}
 
-# The instance ID of the Jenkins master to target
-variable "jenkins_master_instance_id" {}
-
 # IP address to restrict inbound access to ALB
 variable "source_ips_master_http" {
     type = "list"
@@ -17,3 +14,11 @@ variable "source_ips_master_http" {
 
 # The domain name to create a certificate for TLS termination on the ALB
 variable "domain_name" {}
+
+# A map of per-customer Jenkins masters (name : master_instance_id)
+variable "jenkins_masters" {
+    type = "map"
+}
+
+# The number of Jenkins masters in var.jenkins_masters
+variable "jenkins_masters_count" {}
