@@ -10,20 +10,20 @@ variable "ec2_key_pair_name" {}
 # The path to the private key to allow Jenkins master access to slave
 variable "ec2_key_pair_private_path" {}
 
-# Allowed IP ingress ranges
-variable "source_ips_master_http" {
+# Security groups
+variable "slave_security_groups" {
     type = "list"
     default = []
 }
 
-variable "source_ips_master_ssh" {
+variable "master_security_groups" {
     type = "list"
     default = []
 }
 
 # Name prepend for tagged resources
 variable "name_tag_prepend" {
-    default = "default"
+    default = "default_"
 }
 
 # Instance types

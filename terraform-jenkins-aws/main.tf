@@ -1,15 +1,24 @@
 module "vpc" {
     source = "vpc"
+    region = "${var.region}"
+    external_source_ips = "${var.source_ips}"
 }
 
 module "jenkins" {
     source = "jenkins"
     vpc_id = "${module.vpc.vpc_id}"
-    subnet_id = "${module.vpc.public_subnet_id}"
+    subnet_id = "${element(module.vpc.public_subnet_ids, 0)}"
     ec2_key_pair_name = "${var.ec2_key_pair_name}"
     ec2_key_pair_private_path = "${var.ec2_key_pair_private_path}"
-    source_ips_master_http = "${var.source_ips_master}"
-    source_ips_master_ssh = "${var.source_ips_master}"
+    slave_security_groups = ["${module.vpc.master_slave_sg_id}"]
+    master_security_groups = ["${module.vpc.alb_master_sg_id}", "${module.vpc.master_slave_sg_id}"]
+}
+
+module "loadbalancer" {
+    source = "loadbalancer"
+    vpc_id = "${module.vpc.vpc_id}"
+    subnet_ids = ["${module.vpc.public_subnet_ids}"]
+    alb_security_groups = ["${module.vpc.alb_master_sg_id}", "${module.vpc.external_alb_sg_id}"]
 }
 
 output "jenkins_url" {
